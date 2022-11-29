@@ -1,4 +1,193 @@
-## v206 (unreleased)
+# Changelog
+
+## Main (unreleased)
+
+## v246 (2022/11/29)
+
+* Default Node.js version now 16.18.1 (https://github.com/heroku/heroku-buildpack-ruby/pull/1342)
+* Default Yarn version now 1.22.19 (https://github.com/heroku/heroku-buildpack-ruby/pull/1342)
+
+## v245 (2022/11/16)
+
+* Bump Bundler 2 wrapper to 2.3.25 (https://github.com/heroku/heroku-buildpack-ruby/pull/1337)
+
+## v244 (2022/07/25)
+
+* Default Ruby version is now 3.1.2 (https://github.com/heroku/heroku-buildpack-ruby/pull/1316)
+
+## v243 (2022/06/14)
+
+* Switch away from deprecated path-based S3 URLs (https://github.com/heroku/heroku-buildpack-ruby/pull/1311)
+* Adjust curl retry and connection timeout handling (https://github.com/heroku/heroku-buildpack-ruby/pull/1312)
+
+## v242 (2022/06/07)
+
+* Ensure `bin/release` exits zero if `tmp/heroku-buildpack-release-step.yml` does not exist (https://github.com/heroku/heroku-buildpack-ruby/pull/1309)
+* Bootstrap Ruby version used by the buildpack internals is updated to Ruby 3.1.2 (https://github.com/heroku/heroku-buildpack-ruby/pull/1310)
+
+## v241 (2022/06/06)
+
+* `bin/release` is re-written in bash, so it supports Heroku-22 (https://github.com/heroku/heroku-buildpack-ruby/pull/1308)
+* Download presence check now includes heroku-22 (https://github.com/heroku/heroku-buildpack-ruby/pull/1290)
+
+## v240 (2022/04/05)
+
+* Add initial support for heroku-22 (https://github.com/heroku/heroku-buildpack-ruby/pull/1289)
+* Bundler 2.x is now 2.3.10 (https://github.com/heroku/heroku-buildpack-ruby/pull/1296)
+
+## v239 (2022/03/02)
+
+* Rollback bundler 2.x change. Bundler 2.x is now back at 2.2.33 (https://github.com/heroku/heroku-buildpack-ruby/pull/1281)
+
+## v238 (2022/03/02)
+
+* Bundler 2.x is now 2.3.7 (https://github.com/heroku/heroku-buildpack-ruby/pull/1276)
+
+## v237 (2022/02/24)
+
+* Default Ruby version is now 3.0.3 (https://github.com/heroku/heroku-buildpack-ruby/pull/1270)
+
+## v236 (2022/01/04)
+
+* Fix deprecated rake tasks for Rails 7 on Heroku CI (https://github.com/heroku/heroku-buildpack-ruby/pull/1257)
+
+## v235 (2022/01/03)
+
+* Bundler 2.x is now 2.2.33 (https://github.com/heroku/heroku-buildpack-ruby/pull/1248)
+
+## v234 (12/16/2021)
+
+* Fix YML indentation from v233 (https://github.com/heroku/heroku-buildpack-ruby/pull/1252)
+
+## v233 (12/16/2021)
+
+* Default node version now 16.13.1, yarn is 1.22.17 (https://github.com/heroku/heroku-buildpack-ruby/pull/1238)
+* Default Ruby version is now 2.7.5 (https://github.com/heroku/heroku-buildpack-ruby/pull/1237)
+* Remove instrumentation and LPXC logic (https://github.com/heroku/heroku-buildpack-ruby/pull/1229)
+
+## v232 (11/9/2021)
+
+* Deactivate LPXC (https://github.com/heroku/heroku-buildpack-ruby/pull/1228)
+
+## v231 (10/27/2021)
+
+* Applications with `package.json` now get `nodejs` installed (https://github.com/heroku/heroku-buildpack-ruby/pull/1212)
+* Applications with `yarn.lock` now get `yarn` installed (https://github.com/heroku/heroku-buildpack-ruby/pull/1212)
+
+## v230 (10/5/2021)
+
+* Default Ruby version is now 2.7.4 (https://github.com/heroku/heroku-buildpack-ruby/pull/1193)
+
+## v229 (8/30/2021)
+
+* Fix interoperability with other Heroku buildpacks' `$WEB_CONCURRENCY` handling (https://github.com/heroku/heroku-buildpack-ruby/pull/1188)
+
+## v228 (6/24/2021)
+
+* Bundler 2.x is now 2.2.21 (https://github.com/heroku/heroku-buildpack-ruby/pull/1170)
+* Remove support for the Cedar-14 and Heroku-16 stacks (https://github.com/heroku/heroku-buildpack-ruby/pull/1163)
+
+## v227 (4/19/2021)
+
+* Bundler 2.x is now 2.2.16 (https://github.com/heroku/heroku-buildpack-ruby/pull/1150)
+
+## v226 (4/13/2021)
+
+* Bundler 2.x is now 2.2.15 (https://github.com/heroku/heroku-buildpack-ruby/pull/1144)
+
+## v225 (2/25/2021)
+
+* Bundler 2.x is now 2.2.11 (https://github.com/heroku/heroku-buildpack-ruby/pull/1132)
+
+## v224 (2/24/2021)
+
+* Ruby buildpack now relies on the JVM buildpack to install java for Jruby apps (https://github.com/heroku/heroku-buildpack-ruby/pull/1119)
+
+## v223 (1/22/2021)
+
+* Fix Gemfile.lock read bug from preventing propper removal of BUNDLED WITH declaration (https://github.com/heroku/heroku-buildpack-ruby/pull/1108)
+* Fail detection with a CNB-friendly exit code (https://github.com/heroku/heroku-buildpack-ruby/pull/1111)
+
+## v222 (11/02/2020)
+
+* CNB support for Heroku-20 (https://github.com/heroku/heroku-buildpack-ruby/pull/1096)
+
+## v221 (10/22/2020)
+
+* Remove excessive Active Storage warnings (https://github.com/heroku/heroku-buildpack-ruby/pull/1087)
+* Add Heroku-20 to the download presence check (https://github.com/heroku/heroku-buildpack-ruby/pull/1093)
+
+## v220 (8/7/2020)
+
+* BUNDLE_WITHOUT now accommodates values with single spaces (https://github.com/heroku/heroku-buildpack-ruby/pull/1083)
+
+## v219 (8/6/2020)
+
+* Fix double installation of bundler on CI runs when no test script is specified (https://github.com/heroku/heroku-buildpack-ruby/pull/1073)
+* Bundler 2.x is now 2.1.4 (https://github.com/heroku/heroku-buildpack-ruby/pull/1052)
+* Persistent bundler config is now being set using the `BUNDLE_*` env vars (https://github.com/heroku/heroku-buildpack-ruby/pull/1039)
+* Rake task "assets:clean" will not get called if it does not exist (https://github.com/heroku/heroku-buildpack-ruby/pull/1018)
+* CNB: Fix the `gems` layer not being made accessible by subsequent buildpacks (https://github.com/heroku/heroku-buildpack-ruby/pull/1033)
+
+## v218 (7/13/2020)
+
+* The rake binstub generated from compiling Ruby will no longer be placed in the local `bin/rake` location (https://github.com/heroku/heroku-buildpack-ruby/pull/1031)
+* A bug in 2.6.0, 2.6.1, 2.6.3 require a Ruby upgrade, a warning has been added (https://github.com/heroku/heroku-buildpack-ruby/pull/1015)
+* The spring library is now disabled by setting the enviornment variable DISABLE_SPRING=1 (https://github.com/heroku/heroku-buildpack-ruby/pull/1017)
+* Warn when a bad "shebang" line in a binstub is detected (https://github.com/heroku/heroku-buildpack-ruby/pull/1014)
+* Default node version now 12.16.2, yarn is 1.22.4 (https://github.com/heroku/heroku-buildpack-ruby/pull/986)
+
+ ## v217 (7/2/2020)
+
+* Gracefully handle unrecognised stacks ([#982](https://github.com/heroku/heroku-buildpack-ruby/pull/982))
+
+## v216 (rolled back)
+
+
+## v215 (4/9/2020)
+
+* Fix bundler cache not being used in CI builds (https://github.com/heroku/heroku-buildpack-ruby/pull/978)
+
+## v214 (4/2/2020)
+
+* Default Ruby version is now 2.6.6 (https://github.com/heroku/heroku-buildpack-ruby/pull/974)
+* Fix regression. PATH value for `yarn` at runtime was relative instead of absolute (https://github.com/heroku/heroku-buildpack-ruby/pull/975)
+
+## v213 (4/1/2020)
+
+* Fix regression. PATH value for `ruby` at runtime was relative instead of absolute (https://github.com/heroku/heroku-buildpack-ruby/pull/973)
+
+## v212 (3/26/2020)
+
+* Cloud Native Buildpack support (https://github.com/heroku/heroku-buildpack-ruby/pull/888)
+
+## v211 (3/12/2020)
+
+* Fix issue where the wrong version of bundler is used on CI apps (https://github.com/heroku/heroku-buildpack-ruby/pull/961)
+* Remove libpq external dependency (https://github.com/heroku/heroku-buildpack-ruby/pull/959)
+
+## v210 (3/6/2020)
+
+* Fix version download error warning inversion logic (https://github.com/heroku/heroku-buildpack-ruby/pull/958)
+
+## v209 (3/5/2020)
+
+* Fix bug in version download error message logic (https://github.com/heroku/heroku-buildpack-ruby/pull/957)
+
+## v208 (3/4/2020)
+
+* Improve Ruby version download error messages (https://github.com/heroku/heroku-buildpack-ruby/pull/953)
+* Update default Ruby version to 2.6.5 (https://github.com/heroku/heroku-buildpack-ruby/pull/947)
+
+## v207 (12/16/2019)
+
+* Vendor in libpq 5.12.1 for Heroku-18 (https://github.com/heroku/heroku-buildpack-ruby/pull/936)
+* Remove possibilities of false exceptions being raised by removing `BUNDLED WITH` from the `Gemfile.lock` (https://github.com/heroku/heroku-buildpack-ruby/pull/928)
+
+## v206 (10/15/2019)
+
+* Default Ruby version for new apps is now 2.5.7 (https://github.com/heroku/heroku-buildpack-ruby/pull/926)
+* Using old and EOL versions of Ruby now generate warnings (https://github.com/heroku/heroku-buildpack-ruby/pull/864)
 
 ## v205 (9/24/2019)
 

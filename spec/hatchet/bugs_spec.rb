@@ -10,16 +10,25 @@ describe "Bugs" do
 
   context "database connections" do
     it "fails with better error message" do
-      Hatchet::Runner.new("connect_to_database_on_first_push", allow_failure: true).deploy do |app|
-        expect(app.output).to match("https://devcenter.heroku.com/articles/pre-provision-database")
-      end
-    end
-  end
+      Hatchet::Runner.new("ruby-getting-started", allow_failure: true).tap do |app| 
+        app.before_deploy do
+          Pathname("Rakefile").write(<<~EOM)
+            require 'bundler'
+            Bundler.require(:default)
 
-  context "bad versions" do
-    it "fails with better error message" do
-      Hatchet::Runner.new("bad_ruby_version", allow_failure: true).deploy do |app|
-        expect(app.output).to match("devcenter.heroku.com/articles/ruby-support")
+            require 'active_record'
+
+            task "assets:precompile" do
+              # Try to connect to a database that doesn't exist yet
+              ActiveRecord::Base.establish_connection
+              ActiveRecord::Base.connection.execute("")
+            end
+          EOM
+        end
+
+        app.deploy do
+          expect(app.output).to match("https://devcenter.heroku.com/articles/pre-provision-database")
+        end
       end
     end
   end

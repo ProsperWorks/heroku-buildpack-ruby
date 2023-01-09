@@ -1,7 +1,8 @@
-#module LanguagePack::Test::Rails2
+# Opens up the class of the Rails2 language pack and
+# overwrites methods defined in `language_pack/test/ruby.rb`
 class LanguagePack::Rails2
   # sets up the profile.d script for this buildpack
-  def setup_profiled
+  def setup_profiled(ruby_layer_path: , gem_layer_path: )
     super
     set_env_default "RACK_ENV",  "test"
     set_env_default "RAILS_ENV", "test"
@@ -51,7 +52,6 @@ FILE
     end
   end
 
-  private
   def db_prepare_test_rake_tasks
     schema_load    = rake.task("db:schema:load_if_ruby")
     structure_load = rake.task("db:structure:load_if_sql")
@@ -61,7 +61,7 @@ FILE
 
     if schema_load.not_defined? && structure_load.not_defined?
       result = detect_schema_format
-      case result.lines.last.chomp
+      case result.lines.last.strip
       when "ruby"
         schema_load    = rake.task("db:schema:load")
       when "sql" # currently not a possible edge case, we think

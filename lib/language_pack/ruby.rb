@@ -252,6 +252,20 @@ WARNING
   end
 
   def set_default_web_concurrency
+    warn(<<~WARNING)
+      Your application is using an undocumented feature SENSIBLE_DEFAULTS
+
+      This feature is not supported and may be removed at any time. Please remove the SENSIBLE_DEFAULTS environment variable from your app.
+
+      $ heroku config:unset SENSIBLE_DEFAULTS
+
+      To configure your application's web concurrency, use the WEB_CONCURRENCY environment variable following this documentation:
+
+      - https://devcenter.heroku.com/articles/deploying-rails-applications-with-the-puma-web-server#recommended-default-puma-process-and-thread-configuration
+      - https://devcenter.heroku.com/articles/h12-request-timeout-in-ruby-mri#puma-pool-usage
+      - https://help.heroku.com/88G3XLA6/what-is-an-acceptable-amount-of-dyno-load
+    WARNING
+
     <<-EOF
 case $(ulimit -u) in
 256)
@@ -992,6 +1006,8 @@ params = CGI.parse(uri.query || "")
   # decides if we need to enable the dev database addon
   # @return [Array] the database addon if the pg gem is detected or an empty Array if it isn't.
   def add_dev_database_addon
+    return [] if env("HEROKU_SKIP_DATABASE_PROVISION")
+
     pg_adapters.any? {|a| bundler.has_gem?(a) } ? ['heroku-postgresql'] : []
   end
 
@@ -1016,6 +1032,26 @@ params = CGI.parse(uri.query || "")
     if Pathname(build_path).join("package.json").exist? ||
          bundler.has_gem?('execjs') ||
          bundler.has_gem?('webpacker')
+
+      version = @node_installer.version
+      old_version = @metadata.fetch("default_node_version") { version }
+
+      if version != version
+        warn(<<~WARNING, inline: true)
+          Default version of Node.js changed (#{old_version} to #{version})
+        WARNING
+      end
+
+      warn(<<~WARNING, inline: true)
+        Installing a default version (#{version}) of Node.js.
+        This version is not pinned and can change over time, causing unexpected failures.
+
+        Heroku recommends placing the `heroku/nodejs` buildpack in front of
+        `heroku/ruby` to install a specific version of node:
+
+        https://devcenter.heroku.com/articles/ruby-support#node-js-support
+      WARNING
+
       [@node_installer.binary_path]
     else
       []
@@ -1026,6 +1062,27 @@ params = CGI.parse(uri.query || "")
     return [] if yarn_preinstalled?
 
     if Pathname(build_path).join("yarn.lock").exist? || bundler.has_gem?('webpacker')
+
+      version = @yarn_installer.version
+      old_version = @metadata.fetch("default_yarn_version") { version }
+
+      if version != version
+        warn(<<~WARNING, inline: true)
+          Default version of Yarn changed (#{old_version} to #{version})
+        WARNING
+      end
+
+      warn(<<~WARNING, inline: true)
+        Installing a default version (#{version}) of Yarn
+        This version is not pinned and can change over time, causing unexpected failures.
+
+        Heroku recommends placing the `heroku/nodejs` buildpack in front of the `heroku/ruby`
+        buildpack as it offers more comprehensive Node.js support, including the ability to
+        customise the Node.js version:
+
+        https://devcenter.heroku.com/articles/ruby-support#node-js-support
+      WARNING
+
       [@yarn_installer.name]
     else
       []

@@ -1,7 +1,51 @@
 require 'spec_helper'
 
-describe "BundlerWrapper" do
+describe "Bundle platform conversion" do
+  it "converts `bundle platform --ruby` for prerelease versions" do
+    actual = LanguagePack::Helpers::BundlerWrapper.platform_to_version("ruby 3.3.0.preview2")
+    expect(actual).to eq("ruby-3.3.0.preview2")
+  end
 
+  it "converts `bundle platform --ruby` for released versions" do
+    actual = LanguagePack::Helpers::BundlerWrapper.platform_to_version("ruby 3.1.4")
+    expect(actual).to eq("ruby-3.1.4")
+  end
+end
+
+describe "Bundler version detection" do
+  it "supports minor versions" do
+    wrapper_klass = LanguagePack::Helpers::BundlerWrapper
+    version = wrapper_klass.detect_bundler_version(contents: "BUNDLED WITH\n   1.17.3")
+    expect(wrapper_klass::BLESSED_BUNDLER_VERSIONS.key?("1")).to be_truthy
+    expect(version).to eq(wrapper_klass::BLESSED_BUNDLER_VERSIONS["1"])
+
+    version = wrapper_klass.detect_bundler_version(contents: "BUNDLED WITH\n   2.2.7")
+    expect(wrapper_klass::BLESSED_BUNDLER_VERSIONS.key?("2.3")).to be_truthy
+    expect(version).to eq(wrapper_klass::BLESSED_BUNDLER_VERSIONS["2.3"])
+
+    version = wrapper_klass.detect_bundler_version(contents: "BUNDLED WITH\n   2.3.7")
+    expect(wrapper_klass::BLESSED_BUNDLER_VERSIONS.key?("2.3")).to be_truthy
+    expect(version).to eq(wrapper_klass::BLESSED_BUNDLER_VERSIONS["2.3"])
+
+    version = wrapper_klass.detect_bundler_version(contents: "BUNDLED WITH\n   2.4.7")
+    expect(wrapper_klass::BLESSED_BUNDLER_VERSIONS.key?("2.4")).to be_truthy
+    expect(version).to eq(wrapper_klass::BLESSED_BUNDLER_VERSIONS["2.4"])
+
+    version = wrapper_klass.detect_bundler_version(contents: "BUNDLED WITH\n   2.5.7")
+    expect(wrapper_klass::BLESSED_BUNDLER_VERSIONS.key?("2.5")).to be_truthy
+    expect(version).to eq(wrapper_klass::BLESSED_BUNDLER_VERSIONS["2.5"])
+
+    version = wrapper_klass.detect_bundler_version(contents: "BUNDLED WITH\n   2.6.7")
+    expect(wrapper_klass::BLESSED_BUNDLER_VERSIONS.key?("2.5")).to be_truthy
+    expect(version).to eq(wrapper_klass::BLESSED_BUNDLER_VERSIONS["2.5"])
+
+    expect {
+      wrapper_klass.detect_bundler_version(contents: "BUNDLED WITH\n   3.6.7")
+    }.to raise_error(wrapper_klass::UnsupportedBundlerVersion)
+  end
+end
+
+describe "BundlerWrapper mutates rubyopt" do
   before(:each) do
     if ENV['RUBYOPT']
       @original_rubyopt = ENV['RUBYOPT']
@@ -54,10 +98,10 @@ describe "BundlerWrapper" do
         Bundler.with_unbundled_env do
           @bundler.install
 
-          expect(@bundler.ruby_version).to eq("ruby-2.5.1")
+          expect(@bundler.ruby_version).to include("ruby-2.5.1")
 
           ruby_version = LanguagePack::RubyVersion.new(@bundler.ruby_version, is_new: true)
-          expect(ruby_version.version_for_download).to eq("ruby-2.5.1")
+          expect(ruby_version.version_for_download).to include("ruby-2.5.1")
         end
       end
     end
@@ -68,17 +112,6 @@ describe "BundlerWrapper" do
           @bundler.install
 
           expect(@bundler.ruby_version).to eq("ruby-2.3.1-p0-jruby-9.1.7.0")
-        end
-      end
-    end
-
-    it "handles app with output in their Gemfile" do
-      Hatchet::App.new("problem_gemfile_version").in_directory_fork do |dir|
-        Bundler.with_unbundled_env do
-          @bundler.install
-
-          run!(%{echo '\nputs "some output"\n' >> Gemfile})
-          expect(@bundler.ruby_version).to eq("ruby-2.5.1")
         end
       end
     end

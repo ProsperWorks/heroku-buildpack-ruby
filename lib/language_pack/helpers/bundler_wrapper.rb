@@ -2,6 +2,8 @@
 
 require 'language_pack/fetcher'
 
+puts 'HELLO'
+
 # This class is responsible for installing and maintaining a
 # reference to bundler. It contains access to bundler internals
 # that are used to introspect a project such as detecting presence
@@ -41,6 +43,7 @@ class LanguagePack::Helpers::BundlerWrapper
   BLESSED_BUNDLER_VERSIONS["2.3"] = "2.3.25"
   BLESSED_BUNDLER_VERSIONS["2.4"] = "2.4.22"
   BLESSED_BUNDLER_VERSIONS["2.5"] = "2.5.6"
+  BLESSED_BUNDLER_VERSIONS["4.0"] = "4.0.0"
   BLESSED_BUNDLER_VERSIONS.default_proc = Proc.new do |hash, key|
     if Gem::Version.new(key).segments.first == 1
       hash["1"]
@@ -68,7 +71,7 @@ class LanguagePack::Helpers::BundlerWrapper
     end
   end
 
-  BUNDLED_WITH_REGEX = /^BUNDLED WITH$(\r?\n)   (?<major>\d+)\.(?<minor>\d+)\.\d+/m
+  BUNDLED_WITH_REGEX = /^BUNDLED WITH$(\r?\n)\s+(?<major>\d+)\.(?<minor>\d+)\.\d+/m
 
   class GemfileParseError < BuildpackError
     def initialize(error)
